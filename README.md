@@ -1,2 +1,2 @@
-# ControlerFriendlyCoding
-Code with a controler
+# ControllerBasedCoding (CBC)
+Coding with a controller
