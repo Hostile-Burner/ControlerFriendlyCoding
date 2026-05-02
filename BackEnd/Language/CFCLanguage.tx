@@ -1,8 +1,0 @@
-//NOTE: may delete this file entirely
-
-Select:
-    Num | abc | equation | special
-;
-Degree:
-    'rotate' r=FLOAT
-;

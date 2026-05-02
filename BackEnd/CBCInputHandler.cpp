@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "Language/CFCLanguage.cpp"
+#include "Language/CBCLanguage.cpp"
 
 //on startup, select between active translation or file reading
 //TODO: Live translation
@@ -22,19 +22,10 @@ int main(){
         std::cout << "input file name:";
         std::getline(std::cin, userInput);
 
-        FILE* fileInput = fopen(userInput.c_str(), "r");
-
-        if (fileInput == nullptr) {
-            std::cerr << "Error: Could not open file." << std::endl;
-            return 1;
-        }
-
-        //loop each line in file till end of file
-        while (fileInput != nullptr){
-            
-        }
+        runFile(userInput);
     } else {
         std::cerr << "Error: invalid input detected, restart program to select again.";
+        return 1;
     }
-    return 1;
+    return 0;
 }
