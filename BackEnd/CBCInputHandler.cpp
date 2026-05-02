@@ -7,6 +7,7 @@
 //TODO: File reading
 int main(){
     std::string userInput;
+    CBC CBC;
 
     while(true){
         //selection
@@ -26,7 +27,7 @@ int main(){
             std::cout << "input file name:";
             std::getline(std::cin, userInput);
 
-            runFile(userInput); // send file name to language
+            CBC.runFile(userInput); // send file name to language
         } else {
             std::cout << "invalid input detected, please try again." << std::endl;
             continue;
