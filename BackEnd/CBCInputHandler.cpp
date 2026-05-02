@@ -8,24 +8,29 @@
 int main(){
     std::string userInput;
 
-    //selection
-    std::cout << "Select useage by entering number:" << "\n"
-              << "1. Live Translation" << "\n"
-              << "2. Read File" 
-              << std::endl;
+    while(true){
+        //selection
+        std::cout << "Select useage by entering number:" << "\n"
+                << "0. Exit" << "\n"
+                << "1. Live Translation" << "\n"
+                << "2. Read File" 
+                << std::endl;
 
-    std::getline(std::cin, userInput);
-    if(userInput == "1"){
-        std::cout << "This usage has not been implemented, terminating program.";
-
-    } else if (userInput == "2") {
-        std::cout << "input file name:";
         std::getline(std::cin, userInput);
+        if (userInput == "0"){
+            return 0;
+        } else if (userInput == "1"){
+            std::cout << "This usage has not been implemented, terminating program.";
 
-        runFile(userInput);
-    } else {
-        std::cerr << "Error: invalid input detected, restart program to select again.";
-        return 1;
+        } else if (userInput == "2") {
+            std::cout << "input file name:";
+            std::getline(std::cin, userInput);
+
+            runFile(userInput); // send file name to language
+        } else {
+            std::cout << "invalid input detected, please try again." << std::endl;
+            continue;
+        }
+        return 0;
     }
-    return 0;
 }
