@@ -1,14 +1,14 @@
 Controller:
 
 Select: 
-Start: 
+Start: Run
 
-Left Joystick: 
+Left Joystick: Movement
 Right Joystick: 
 
 Button 1: 
-Button 2: 
-Button 3: 
+Button 2: Enter
+Button 3: Backspace
 Button 4: 
 
 Left Bumper 1: 
@@ -20,3 +20,4 @@ Arrow 1:
 Arrow 2: 
 Arrow 3: 
 Arrow 4: 
+

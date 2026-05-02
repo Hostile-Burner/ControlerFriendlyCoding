@@ -1,0 +1,24 @@
+4 circle buttons: b1-b4
+left/right joystick: lj1, rj1
+select: s1
+start: s2
+left/right bumpers: lb1, lb2, rb1, rb2
+arrows: a1-a4
+
+clockwise
+b1: top button
+b4: left button
+
+lj1: movement around file
+rj1: select wheel handler? check via degrees or something
+s2: run file
+
+bumpers: extra, allow customization
+arrows: extra, allow customization
+
+needed inputs:
+enter
+backspace
+movement around file
+pick what catagory to use - each button has list that can be selected
+pick from catagory - can use 360 degrees for selection with joystick?
