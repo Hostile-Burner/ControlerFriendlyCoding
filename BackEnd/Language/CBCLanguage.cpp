@@ -5,11 +5,11 @@
 
 class CBC {
     private:
-    std::unordered_map<int, std::string> env;
-    std::vector<std::string> nums = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
-    std::vector<std::string> eq = {"=", "+", "-", "*", "/", "()"};
-    std::vector<std::string> cond = {"if ()", "else", "else if ()"};
-    std::vector<std::string> special = {" ", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "{", "}", "[", "]", ";", ":", ",", ".", "?"};
+    std::vector<char> alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    std::vector<char> numbers = {'1','2','3','4','5','6','7','8','9','0'};
+    std::vector<std::string> equations = {"=", "+", "-", "*", "/", "()"};
+    std::vector<char> special = {' ', '!', '/', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '[', ']', '{', '}', '\\', '|', ';', ':', '\'', '\"', ',', '<', '>', '.', '?'};
+    std::vector<std::string> conditions = {"if ()", "else", "else if ()"};
 
     //used to trim extra spaces
     std::string trim(const std::string& str) {
@@ -20,58 +20,50 @@ class CBC {
         return std::string(start, end + 1);
     }
 
-    std::string pickFromCircle(int degrees, const std::vector<std::string>& options) {
-        if (options.empty()) return "";
-        // Divide 360 degrees
-        float segment = 360.0f / options.size();
-        int index = std::floor(degrees / segment);
-
-        //Clamp Index to prevent out of bounds at 360
-        if (index >= options.size()) index = options.size() - 1;
-        return options[index];
+    //Map a degree 0-360 to an index in a vector
+    template<typename T>
+    T getFromWheel(int degrees, const std::vector<T>& vec) {
+        if (vec.empty()) return T();
+        int index = (degrees * vec.size()) / 361; 
+        return vec[index];
     }
     //translate raw inputs into readable language
     std::string translate(std::string input){
-        if (input.empty()) return "";
+        if (input.length() < 2) return "";
 
-        std::string result = "";
-        // Process chunks likes c024
-        for (size_t i = 0; i < input.length(); i+= 4) {
-            char identity = input [i];
-            int degrees = std::stoi(input.substr(i + 1, 3);
+        char identity = input[0]; 
+        int degrees = std::stoi(input.substr(1));
 
-            switch (identity) {
-                case 'n': //Numbers
-                    result += pickFromCircle(degrees, nums);
-                    break;
-                case 'e': //Equations
-                    result += pickFromCircle(degrees, eq);
-                    break;
-                case 'c': //Conditionals
-                    result += pickFromCircle(degrees, cond);
-                    break;
-                case 's': // Special characters
-                    result += pickFromCircle(degrees, special);
-                    break;
-                case 'a': //Variables (abc)
-                    result += "a"; //Placehold for alphabet logic
-                    break;
+        switch (identity) {
+            case 'n': return std::string(1, getFromWheel(degrees, numbers));
+            case 'a': return std::string(1, getFromWheel(degrees, alphabet));
+            case 'e': return getFromWheel(degrees, equations);
+            case 's': return std::string(1, getFromWheel(degrees, special));
+            case 'c': return getFromWheel(degrees, conditions);
+            default: return "";
+        }
+    }
+
+public:
+    void run(std::string line) {
+        //parser to split n120 a010 into tokens
+        std::string  translatedLine = "";
+        std::string currentToken = "";
+        for (char c : line){
+            if (c== ' '){
+                translatedLine+= translate(currentToken);
+                currentToken = "";
+            } else {
+                currentToken += c;
             }
         }
-        return result;
-    }
-    void run(std::string input){
-        std::string code = translate(input);
-        std::cout<< "Translating Code: " << code << std::endl;
+        translatedLine+= translate(currentToken);
+
+        std::cout << "Executed: " <<translatedLine << std::endl;
     }
 
-    public:
-    void runLive(){
-
-    }
     void runFile(std::string fileName){
         std::ifstream file(fileName);
-        
         if (!file.is_open()) {
             std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
             return;
