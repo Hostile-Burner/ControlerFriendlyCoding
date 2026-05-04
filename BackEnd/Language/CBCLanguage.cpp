@@ -18,12 +18,34 @@ class CBC {
 
     //translate raw inputs into readable language
     std::string translate(std::string input){
-        //
+        if (input.empty()) return "";
+        
+        //Identifies the category from the first character
+        char category = input[0];
+        //Extract the jostick degrees
+        int degrees = std::stoi(input.substr(1));
+
+        if (category == 'c') { 
+            if (degrees < 90) return "if (";
+            if (degrees >= 90 && degrees <180) return "loop ";
+        }
+        else if (category == 'n') {
+            //Converts degree range to a specific number of variable identity
+            return "2";
+        }
+        else if (category == 'e') {
+            return ") {";
+        }
+        else if (category == 's') {
+            return "}" ;
+        }
+        return input; 
     }
     void run(std::string input){
-        input = translate(input);
+        // run calls 'translate' to convert "c024" into "if ("
+        std::string translatedCode = translate(input);
 
-
+        std::cout<< "Executing: " << translatedCode << std::endl;
     }
 
     public:
