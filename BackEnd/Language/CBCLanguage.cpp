@@ -33,27 +33,28 @@ class CBC {
             std::string translatedLine = "";
             while(!input.empty()) {
                 
-            // Handle leading spaces
-            if (std::isspace(input.front())) {
-            input.erase(0, 1);
-            continue;
-        }
+                // Handle leading spaces
+                if (std::isspace(input.front())) {
+                    input.erase(0, 1);
+                    continue;
+                }
 
-        // Translate 3-character tokens 
-        if (input.length() >= 4) { 
-            translatedLine.append(translate(input.substr(0, 4)) + " ");
-            input.erase(0, 4);
-        } else {
-            input.clear();
+                // Translate 4-character tokens :'''###'
+                if (input.length() >= 4) { 
+                    translatedLine.append(translate(input.substr(0, 4)));
+                    input.erase(0, 4);
+                } else {
+                    input.clear();
+                }
+            }
+            return translatedLine;
         }
-    }
-}
 
     public:
         void runLive(){
             //should handle live translation of controller input
             ///TODO: take input from controller handler
-            ///TODO: translate input
+            ///TODO: translate input using run() or translate()
             ///TODO: output as live keyboard input
             //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
             //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
@@ -71,7 +72,6 @@ class CBC {
             fileName = fileName.substr(0, fileName.find_last_of('.')) + ".cpp";
             std::ofstream fileOut;
             fileOut.open(fileName, std::ios::out);
-
 
             std::string line;
             //loop each line in file till end of file
