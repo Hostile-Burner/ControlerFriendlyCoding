@@ -28,6 +28,7 @@ class CBC {
         std::string translate(std::string input){
             return toString(cat.getCat(input[0],input.substr(1)));
         }
+        //TODO: convert to spit out string maybe for runFile TODO
         void run(std::string input) {
             std::string translatedLine = "";
             while(!input.empty()) {
@@ -68,6 +69,7 @@ class CBC {
                 run(trim(line));
             }
 
+            //TODO:Change to spit out language converted version file and then run that file
             file.close();
             return;
         }
