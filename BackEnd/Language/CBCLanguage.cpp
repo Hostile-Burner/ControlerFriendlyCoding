@@ -51,7 +51,12 @@ class CBC {
 
     public:
         void runLive(){
-            //TODO:
+            //should handle live translation of controller input
+            ///TODO: take input from controller handler
+            ///TODO: translate input
+            ///TODO: output as live keyboard input
+            //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
+            //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
             std::cout << "This usage has not been implemented.";
         }
         void runFile(std::string fileName){
