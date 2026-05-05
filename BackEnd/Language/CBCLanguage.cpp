@@ -28,7 +28,7 @@ class CBC {
         std::string translate(std::string input){
             return toString(cat.getCat(input[0],input.substr(1)));
         }
-        
+
         std::string run(std::string input) {
             std::string translatedLine = "";
             while(!input.empty()) {
@@ -47,8 +47,6 @@ class CBC {
             input.clear();
         }
     }
-    // Execution via environment 
-    std::cout << "Executing: " << translatedLine << std::endl;
 }
 
     public:
