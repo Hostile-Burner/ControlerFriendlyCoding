@@ -28,23 +28,27 @@ class CBC {
         std::string translate(std::string input){
             return toString(cat.getCat(input[0],input.substr(1)));
         }
-        void run(std::string input){
-            //TODO: translate, if there multiple inputs in a line, convert each one
-            //TODO: check for skip lines
-            //recommend do loop till end of string
-            std::string temp = "";
-            while(input != "") {
-                if (input.front() == ' '){
-                    //TODO: handle spaces
-                    input.erase(0,1);
-                }
-                temp.append(translate(input.substr(0,3)));
-                input.erase(0,3);
-            }
-            input = temp; // input now holds translated version of line
-            //TODO: do libary here
-            //RECOMMENDED: use of env
+        void run(std::string input) {
+            std::string translatedLine = "";
+            while(!input.empty()) {
+                
+            // Handle leading spaces
+            if (std::isspace(input.front())) {
+            input.erase(0, 1);
+            continue;
         }
+
+        // Translate 3-character tokens 
+        if (input.length() >= 4) { 
+            translatedLine.append(translate(input.substr(0, 4)) + " ");
+            input.erase(0, 4);
+        } else {
+            input.clear();
+        }
+    }
+    // Execution via environment 
+    std::cout << "Executing: " << translatedLine << std::endl;
+}
 
     public:
         void runLive(){
