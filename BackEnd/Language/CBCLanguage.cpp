@@ -59,10 +59,10 @@ class CBC {
             
             if (!fileIn.is_open()) {
                 std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
-                return;
+                exit(1);
             }
 
-            //TODO: replace ".cpp" with input from controller handler to select any language
+            ///TODO: replace ".cpp" with input from controller handler to select any language
             fileName = fileName.substr(0, fileName.find_last_of('.')) + ".cpp";
             std::ofstream fileOut;
             fileOut.open(fileName, std::ios::out);
@@ -79,7 +79,7 @@ class CBC {
             std::string compile = "cl \"" + fileName + "\"";
             if (system(compile.c_str()) != 0) {
                 std::cerr << "Compile failed." << std::endl;
-                return;
+                exit(1);
             }
 
             //executes .exe
