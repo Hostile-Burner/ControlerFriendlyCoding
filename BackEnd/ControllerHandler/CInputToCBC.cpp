@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <SDL3/SDL.h>
 #include "../Language/Categories.cpp"
-#include "../Language/CBCLanguage.cpp"
+#include "Language/CBCLanguage.cpp"
 
 ///TODO: just double check, as enter is loaded with being the enter key, and also confirm button
 ///FIXME:handleButtonPress() uses endl, others use flush, should be consistent, flush is better for live updates so changing to that.
@@ -105,7 +105,7 @@ void updateJoystick(int16_t x, int16_t y) {
         // Spacebar Action Immediately sends 's000' 
         if (sdlButtonIdx == SDL_GAMEPAD_BUTTON_LEFT_SHOULDER) { // Mapping LB1 to Space[cite: 6]
             std::cout << "\n[ACTION: Spacebar]" << std::endl;
-            cbcProcessor.run("s000"); // 's000' represents a space ' '[cite: 1, 7].
+            cbcProcessor.runLive("s000"); // 's000' represents a space ' '[cite: 1, 7].
             return;
         }
 
@@ -120,7 +120,7 @@ void updateJoystick(int16_t x, int16_t y) {
             std::string token = getConfirmedToken();
             if (!token.empty()) {
                 std::cout << "\nConfirmed: " << token << std::endl;
-                cbcProcessor.run(token);[cite: 3]
+                cbcProcessor.runLive(token);[cite: 3];
             }
             return;
         }
