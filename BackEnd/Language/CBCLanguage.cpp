@@ -55,17 +55,32 @@ class CBC {
             }
             return translatedLine;
         }
-
-    public:
-        void runLive(){
             //should handle live translation of controller input
             ///TODO: take input from controller handler
             ///TODO: translate input using run() or translate()
             ///TODO: output as live keyboard input
             //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
             //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
-            std::cout << "This usage has not been implemented.";
-        }
+public:
+        /**
+         * LIVE TRANSLATION
+         * This takes a single token from the controller and processes it immediately
+         */
+        void runLive(std::string token){
+            if (token.empty()) return;
+
+            // Translate the token 
+            std::string translated = run(token);
+
+            ///TODO: remove after keyboardVirtual is setup, should do in there instead
+            // Output the result
+            // Spits it back to PowerShell for testing
+            std::cout << translated << std::flush;
+
+            /// TODO: Call Keyboard.cpp here to send actual keystrokes to Windows
+            // Keyboard::sendInput(translated);
+        }      
+
         void runFile(std::string fileName){
             std::ifstream fileIn("Files/" + fileName);
             

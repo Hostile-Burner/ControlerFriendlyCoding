@@ -7,8 +7,8 @@
 #include <cmath>
 #include <iomanip>
 #include <SDL3/SDL.h>
-#include "Language/Categories.cpp"
-#include "Language/CBCLanguage.cpp"
+#include "../Language/Categories.cpp"
+#include "../Language/CBCLanguage.cpp"
 
 ///TODO: just double check, as enter is loaded with being the enter key, and also confirm button
 ///FIXME:handleButtonPress() uses endl, others use flush, should be consistent, flush is better for live updates so changing to that.
