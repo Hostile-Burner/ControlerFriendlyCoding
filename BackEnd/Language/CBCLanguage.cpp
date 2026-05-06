@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <fstream>
 #include <string>
-#include <windows.h>
 #include "Categories.cpp"
 #include "CInputToCBC.cpp" 
 
@@ -10,21 +9,6 @@ class CBC {
     private:
         std::unordered_map<int, std::string> env;
         Category cat;
-
-        // Helper to simulate keyboard typing
-        void sendKeyboardOutput(const std::string& text) {
-            for (char c : text) {
-                INPUT input = {0};
-                input.type = INPUT_KEYBOARD;
-                input.ki.wVk = 0;
-                input.ki.wScan = c;
-                input.ki.dwFlags = KEYEVENTF_UNICODE;
-                SendInput(1, &input, sizeof(INPUT));
-
-                input.ki.dwFlags |= KEYEVENTF_KEYUP;
-                SendInput(1, &input, sizeof(INPUT));
-            }
-        }
 
         //used to trim extra spaces
         std::string trim(const std::string& str) {
@@ -43,12 +27,11 @@ class CBC {
             return oss.str();
         }
 
-        // Translates tokens like "n045" into the actual character
-        std::string translate(std::string input) {
-            if (input.length() < 4) return "";
-            return toString(cat.getCat(input[0], input.substr(1)));
+        //translate raw inputs into readable language
+        std::string translate(std::string input){
+            return toString(cat.getCat(input[0],input.substr(1)));
         }
-        
+
         std::string run(std::string input) {
             std::string translatedLine = "";
             while(!input.empty()) {
@@ -72,54 +55,19 @@ class CBC {
 
     public:
         ///TODO: take input from controller handler
-        void runLive(std::string token) {
-            if (token.empty()) return;
-            std::string output = translate(token);[cite: 9]
-            if (!output.empty()) {
-                sendKeyboardOutput(output); 
-            }
+        void runLive(CInputToCBC& translator) {
+            // Take input from controller handler
+            std::string token = translator.getConfirmedToken();
+
+            if (!token.empty()) {
+                // Translate input using run()
+                std::string output = run(token);
+
+                // Output as live keyboard input to terminal
+                // Example: n045 -> 1
+                std::cout << output << std::flush;
+            } 
         }
-
-        // Logic for Backspace (assigned to Button 3/Square/X)
-        void sendBackspace() {
-            INPUT input = {0};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wVk = VK_BACK; 
-            SendInput(1, &input, sizeof(INPUT));
-
-            input.ki.dwFlags = KEYEVENTF_KEYUP;
-            SendInput(1, &input, sizeof(INPUT));
-
-        // Logic for Enter/New Line (assigned to Button 2/Circle/B)
-        void sendEnter() {
-            INPUT input = {0};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wVk = VK_RETURN; 
-            SendInput(1, &input, sizeof(INPUT));
-
-            input.ki.dwFlags = KEYEVENTF_KEYUP;
-            SendInput(1, &input, sizeof(INPUT));
-        }
-
-        // Processes a full string of tokens from a file
-        std::string run(std::string input) {
-            std::string translatedLine = "";
-            while(!input.empty()) {
-                if (std::isspace(input.front())) {
-                    input.erase(0, 1);
-                    continue;
-                }
-                // Tokens are 1 char prefix + 3 char degree
-                if (input.length() >= 4) { 
-                    translatedLine.append(translate(input.substr(0, 4)));[cite: 9]
-                    input.erase(0, 4);
-                } else {
-                    input.clear();
-                }
-            }
-            return translatedLine;
-        }
-
        void runFile(std::string fileName, std::string extension = ".cpp") {
             std::ifstream fileIn(fileName);
             
