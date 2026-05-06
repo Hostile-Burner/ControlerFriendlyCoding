@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "Categories.cpp"
+#include "CInputToCBC.cpp" 
 
 class CBC {
     private:
@@ -11,9 +12,11 @@ class CBC {
 
         //used to trim extra spaces
         std::string trim(const std::string& str) {
+            if (str.empty()) return str;   
             auto start = str.begin();
             while (start != str.end() && std::isspace(*start)) ++start;
             auto end = str.end();
+            if (start == end) return "";
             do { --end; } while (end != start && std::isspace(*end));
             return std::string(start, end + 1);
         }
@@ -51,16 +54,21 @@ class CBC {
         }
 
     public:
-        void runLive(){
-            //should handle live translation of controller input
-            ///TODO: take input from controller handler
-            ///TODO: translate input using run() or translate()
-            ///TODO: output as live keyboard input
-            //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
-            //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
-            std::cout << "This usage has not been implemented.";
+        ///TODO: take input from controller handler
+        void runLive(CInputToCBC& translator) {
+            // Take input from controller handler
+            std::string token = translator.getConfirmedToken();
+
+            if (!token.empty()) {
+                // Translate input using run()
+                std::string output = run(token);
+
+                // Output as live keyboard input to terminal
+                // Example: n045 -> 1
+                std::cout << output << std::flush;
+            } 
         }
-        void runFile(std::string fileName){
+       void runFile(std::string fileName, std::string extension = ".cpp") {
             std::ifstream fileIn(fileName);
             
             if (!fileIn.is_open()) {
@@ -82,6 +90,8 @@ class CBC {
             fileOut.close();
 
             ///TODO: add to dump the files with the inputfile location
+            std::cout << "Source translated to: " << outputFileName << std::endl;
+           
             //Compiles a .exe to run the file output
             std::string compile = "cl \"" + fileName + "\"";
             if (system(compile.c_str()) != 0) {
@@ -89,6 +99,8 @@ class CBC {
                 exit(1);
             }
             //executes .exe
-            system((".\\" + fileName.substr(0, fileName.find_last_of('.')) + ".exe").c_str());
+            std::string exeName = ".\\" + outputFileName.substr(0, outputFileName.find_last_of('.')) + ".exe";
+            std::cout << "Executing: " << exeName << std::endl;
+            system(exeName.c_str());
         }
 };
