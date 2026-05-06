@@ -1,7 +1,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 
-int main() {
+void runControllerInput() {
     //initalize SDL
     if (!SDL_Init(SDL_INIT_GAMEPAD)) {
         std::cerr << "SDL init failed: " << SDL_GetError() << "\n";

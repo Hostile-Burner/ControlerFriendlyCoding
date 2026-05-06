@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include "Language/CBCLanguage.cpp"
+#include <SDL3/SDL.h>
+#include "BackEnd/Language/CBCLanguage.cpp"
 
 //on startup, select between active translation or file reading
 ///TODO: Live translation
@@ -24,7 +25,6 @@ int main(){
             exit(0);
         } else if (userInput == "1"){
             std::cout << "This usage has not been implemented, terminating program.";
-
         } else if (userInput == "2") {
             std::cout << "input file name:";
             std::getline(std::cin, userInput);

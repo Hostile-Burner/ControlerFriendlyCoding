@@ -1,6 +1,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
+//#include <cctype>
 #include <string>
 #include "Categories.cpp"
 
@@ -11,11 +13,14 @@ class CBC {
 
         //used to trim extra spaces
         std::string trim(const std::string& str) {
-            auto start = str.begin();
-            while (start != str.end() && std::isspace(*start)) ++start;
-            auto end = str.end();
-            do { --end; } while (end != start && std::isspace(*end));
-            return std::string(start, end + 1);
+            if (str.empty()) return "";
+
+            size_t start = str.find_first_not_of(" \t\n\r");
+            if (start == std::string::npos) return "";
+
+            size_t end = str.find_last_not_of(" \t\n\r");
+
+            return str.substr(start, end - start + 1);
         }
         template <typename T>
         std::string toString(const T& value) {
@@ -26,7 +31,9 @@ class CBC {
 
         //translate raw inputs into readable language
         std::string translate(std::string input){
-            return toString(cat.getCat(input[0],input.substr(1)));
+            auto val = cat.getCat(input[0], input.substr(1));
+
+            return std::visit([this](auto&& v) {return toString(v);}, val);
         }
 
         std::string run(std::string input) {
@@ -65,7 +72,7 @@ class CBC {
             
             if (!fileIn.is_open()) {
                 std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
-                exit(1);
+                return;
             }
 
             ///TODO: replace ".cpp" with input from controller handler to select any language
@@ -86,7 +93,7 @@ class CBC {
             std::string compile = "cl \"" + fileName + "\"";
             if (system(compile.c_str()) != 0) {
                 std::cerr << "Compile failed." << std::endl;
-                exit(1);
+                return;
             }
             //executes .exe
             system((".\\" + fileName.substr(0, fileName.find_last_of('.')) + ".exe").c_str());
