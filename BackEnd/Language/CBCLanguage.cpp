@@ -55,17 +55,14 @@ class CBC {
             }
             return translatedLine;
         }
-            //should handle live translation of controller input
-            ///TODO: take input from controller handler
-            ///TODO: translate input using run() or translate()
-            ///TODO: output as live keyboard input
-            //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
-            //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
 public:
         /**
          * LIVE TRANSLATION
          * This takes a single token from the controller and processes it immediately
          */
+        ///TODO: output as live keyboard input
+        //example: n045 would be translated to 1, then output as if the user typed "1" on the keyboard
+        //example: c300 would be translated to "if ", then output as if the user typed "if " on the keyboard
         void runLive(std::string token){
             if (token.empty()) return;
 
