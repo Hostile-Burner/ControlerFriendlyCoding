@@ -1,6 +1,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
+//#include <cctype>
 #include <string>
 #include "Categories.cpp"
 #include "CInputToCBC.cpp" 
@@ -12,13 +14,14 @@ class CBC {
 
         //used to trim extra spaces
         std::string trim(const std::string& str) {
-            if (str.empty()) return str;   
-            auto start = str.begin();
-            while (start != str.end() && std::isspace(*start)) ++start;
-            auto end = str.end();
-            if (start == end) return "";
-            do { --end; } while (end != start && std::isspace(*end));
-            return std::string(start, end + 1);
+            if (str.empty()) return "";
+
+            size_t start = str.find_first_not_of(" \t\n\r");
+            if (start == std::string::npos) return "";
+
+            size_t end = str.find_last_not_of(" \t\n\r");
+
+            return str.substr(start, end - start + 1);
         }
         template <typename T>
         std::string toString(const T& value) {
@@ -29,7 +32,9 @@ class CBC {
 
         //translate raw inputs into readable language
         std::string translate(std::string input){
-            return toString(cat.getCat(input[0],input.substr(1)));
+            auto val = cat.getCat(input[0], input.substr(1));
+
+            return std::visit([this](auto&& v) {return toString(v);}, val);
         }
 
         std::string run(std::string input) {
@@ -68,18 +73,18 @@ class CBC {
                 std::cout << output << std::flush;
             } 
         }
-       void runFile(std::string fileName, std::string extension = ".cpp") {
-            std::ifstream fileIn(fileName);
+        void runFile(std::string fileName){
+            std::ifstream fileIn("Files/" + fileName);
             
             if (!fileIn.is_open()) {
                 std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
-                exit(1);
+                return;
             }
 
             ///TODO: replace ".cpp" with input from controller handler to select any language
             fileName = fileName.substr(0, fileName.find_last_of('.')) + ".cpp";
             std::ofstream fileOut;
-            fileOut.open(fileName, std::ios::out);
+            fileOut.open("Files/" + fileName, std::ios::out);
 
             std::string line;
             //loop each line in file till end of file
@@ -89,18 +94,16 @@ class CBC {
             fileIn.close();
             fileOut.close();
 
-            ///TODO: add to dump the files with the inputfile location
-            std::cout << "Source translated to: " << outputFileName << std::endl;
-           
+            fileName = fileName.substr(0, fileName.find_last_of('.'));
             //Compiles a .exe to run the file output
-            std::string compile = "cl \"" + fileName + "\"";
+            std::string compile =
+"cmd /c \"cd Files && ..\\Compiler\\mingw64\\bin\\g++.exe " +
+fileName + ".cpp -static -static-libgcc -static-libstdc++ -o " + fileName + ".exe\"";
             if (system(compile.c_str()) != 0) {
                 std::cerr << "Compile failed." << std::endl;
-                exit(1);
+                return;
             }
             //executes .exe
-            std::string exeName = ".\\" + outputFileName.substr(0, outputFileName.find_last_of('.')) + ".exe";
-            std::cout << "Executing: " << exeName << std::endl;
-            system(exeName.c_str());
+            system(("cmd /c \"cd Files && " + fileName + ".exe\"").c_str());
         }
 };
