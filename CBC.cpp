@@ -30,6 +30,9 @@ int main(){
             std::getline(std::cin, userInput);
 
             CBC.runFile(userInput); // send file name to language
+            std::cout << "\nPlease restart program if you wish to use this again." << std::endl;
+            ///TODO: think of something better here than what i have now
+            while(true){std::getline(std::cin, userInput);}; // goes nowhere, just to hold till .exe is closed
         } else {
             std::cout << "invalid input detected, please try again." << std::endl;
         }
