@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <SDL3/SDL.h>
 #include "BackEnd/Language/CBCLanguage.cpp"
 
 //on startup, select between active translation or file reading
