@@ -68,7 +68,7 @@ class CBC {
             std::cout << "This usage has not been implemented.";
         }
         void runFile(std::string fileName){
-            std::ifstream fileIn(fileName);
+            std::ifstream fileIn("Files/" + fileName);
             
             if (!fileIn.is_open()) {
                 std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
@@ -78,7 +78,7 @@ class CBC {
             ///TODO: replace ".cpp" with input from controller handler to select any language
             fileName = fileName.substr(0, fileName.find_last_of('.')) + ".cpp";
             std::ofstream fileOut;
-            fileOut.open(fileName, std::ios::out);
+            fileOut.open("Files/" + fileName, std::ios::out);
 
             std::string line;
             //loop each line in file till end of file
@@ -88,14 +88,16 @@ class CBC {
             fileIn.close();
             fileOut.close();
 
-            ///TODO: add to dump the files with the inputfile location
+            fileName = fileName.substr(0, fileName.find_last_of('.'));
             //Compiles a .exe to run the file output
-            std::string compile = "cl \"" + fileName + "\"";
+            std::string compile =
+"cmd /c \"cd Files && ..\\Compiler\\mingw64\\bin\\g++.exe " +
+fileName + ".cpp -static -static-libgcc -static-libstdc++ -o " + fileName + ".exe\"";
             if (system(compile.c_str()) != 0) {
                 std::cerr << "Compile failed." << std::endl;
                 return;
             }
             //executes .exe
-            system((".\\" + fileName.substr(0, fileName.find_last_of('.')) + ".exe").c_str());
+            system(("cmd /c \"cd Files && " + fileName + ".exe\"").c_str());
         }
 };
