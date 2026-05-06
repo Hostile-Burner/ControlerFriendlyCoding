@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
-//#include <cctype>
 #include <string>
 #include "Categories.cpp"
 
@@ -73,11 +72,12 @@ public:
             // Translate the token 
             std::string translated = run(token);
 
+            ///TODO: remove after keyboardVirtual is setup, should do in there instead
             // Output the result
             // Spits it back to PowerShell for testing
             std::cout << translated << std::flush;
 
-            // TODO: Call Keyboard.cpp here to send actual keystrokes to Windows
+            /// TODO: Call Keyboard.cpp here to send actual keystrokes to Windows
             // Keyboard::sendInput(translated);
         }      
 
