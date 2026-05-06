@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "Categories.cpp"
+#include "CInputToCBC.cpp" 
 
 class CBC {
     private:
@@ -11,9 +12,11 @@ class CBC {
 
         //used to trim extra spaces
         std::string trim(const std::string& str) {
+            if (str.empty()) return str;   
             auto start = str.begin();
             while (start != str.end() && std::isspace(*start)) ++start;
             auto end = str.end();
+            if (start == end) return "";
             do { --end; } while (end != start && std::isspace(*end));
             return std::string(start, end + 1);
         }
@@ -28,49 +31,76 @@ class CBC {
         std::string translate(std::string input){
             return toString(cat.getCat(input[0],input.substr(1)));
         }
-        //TODO: convert to spit out string maybe for runFile TODO
-        void run(std::string input) {
+
+        std::string run(std::string input) {
             std::string translatedLine = "";
             while(!input.empty()) {
                 
-            // Handle leading spaces
-            if (std::isspace(input.front())) {
-            input.erase(0, 1);
-            continue;
-        }
+                // Handle leading spaces
+                if (std::isspace(input.front())) {
+                    input.erase(0, 1);
+                    continue;
+                }
 
-        // Translate 3-character tokens 
-        if (input.length() >= 4) { 
-            translatedLine.append(translate(input.substr(0, 4)) + " ");
-            input.erase(0, 4);
-        } else {
-            input.clear();
+                // Translate 4-character tokens :'''###'
+                if (input.length() >= 4) { 
+                    translatedLine.append(translate(input.substr(0, 4)));
+                    input.erase(0, 4);
+                } else {
+                    input.clear();
+                }
+            }
+            return translatedLine;
         }
-    }
-    // Execution via environment 
-    std::cout << "Executing: " << translatedLine << std::endl;
-}
 
     public:
-        void runLive(){
-            std::cout << "This usage has not been implemented.";
+        ///TODO: take input from controller handler
+        void runLive(CInputToCBC& translator) {
+            // Take input from controller handler
+            std::string token = translator.getConfirmedToken();
+
+            if (!token.empty()) {
+                // Translate input using run()
+                std::string output = run(token);
+
+                // Output as live keyboard input to terminal
+                // Example: n045 -> 1
+                std::cout << output << std::flush;
+            } 
         }
-        void runFile(std::string fileName){
-            std::ifstream file(fileName);
+       void runFile(std::string fileName, std::string extension = ".cpp") {
+            std::ifstream fileIn(fileName);
             
-            if (!file.is_open()) {
+            if (!fileIn.is_open()) {
                 std::cerr << "Error: Could not open " << fileName <<"." << std::endl;
-                return;
+                exit(1);
             }
+
+            ///TODO: replace ".cpp" with input from controller handler to select any language
+            fileName = fileName.substr(0, fileName.find_last_of('.')) + ".cpp";
+            std::ofstream fileOut;
+            fileOut.open(fileName, std::ios::out);
 
             std::string line;
             //loop each line in file till end of file
-            while (std::getline(file, line)){
-                run(trim(line));
+            while (std::getline(fileIn, line)){
+                fileOut << run(trim(line)) << std::endl;
             }
+            fileIn.close();
+            fileOut.close();
 
-            //TODO:Change to spit out language converted version file and then run that file
-            file.close();
-            return;
+            ///TODO: add to dump the files with the inputfile location
+            std::cout << "Source translated to: " << outputFileName << std::endl;
+           
+            //Compiles a .exe to run the file output
+            std::string compile = "cl \"" + fileName + "\"";
+            if (system(compile.c_str()) != 0) {
+                std::cerr << "Compile failed." << std::endl;
+                exit(1);
+            }
+            //executes .exe
+            std::string exeName = ".\\" + outputFileName.substr(0, outputFileName.find_last_of('.')) + ".exe";
+            std::cout << "Executing: " << exeName << std::endl;
+            system(exeName.c_str());
         }
 };
