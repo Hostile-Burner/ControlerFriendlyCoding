@@ -99,6 +99,8 @@ public:
             fileIn.close();
             fileOut.close();
 
+            std::cout << "File translated." << std::endl;
+
             fileName = fileName.substr(0, fileName.find_last_of('.'));
             //Compiles a .exe to run the file output
             std::string compile =
@@ -108,7 +110,10 @@ fileName + ".cpp -static -static-libgcc -static-libstdc++ -o " + fileName + ".ex
                 std::cerr << "Compile failed." << std::endl;
                 return;
             }
+            
             //executes .exe
+            std::cout << "files created, running file:" << std::endl;
             system(("cmd /c \"cd Files && " + fileName + ".exe\"").c_str());
+            std::cout << "\n File executed." << std::endl;
         }
 };
