@@ -30,9 +30,12 @@ void runControllerInput() {
         exit(1);
     }
 
+    ///TODO: load settings here
+
     SDL_Event e;
     while (true) {
         //process each input from controller live
+        ///TODO: send raw inputs to CInputToCBC.cpp
         while (SDL_PollEvent(&e)) {
             //buttons
             if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
