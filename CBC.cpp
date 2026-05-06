@@ -24,7 +24,10 @@ int main(){
             exit(0);
         } else if (userInput == "1"){
             std::cout << "This usage has not been implemented, terminating program.";
-            ///TODO: set up connection to controller code here
+            ///TODO: load settings here
+
+            ///TODO: start up controller
+
         } else if (userInput == "2") {
             std::cout << "input file name:";
             std::getline(std::cin, userInput);
