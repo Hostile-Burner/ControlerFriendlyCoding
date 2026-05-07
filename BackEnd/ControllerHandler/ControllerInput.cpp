@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include <iostream>
+#include "CInputToCBC.cpp"
 
 void runControllerInput() {
     //initalize SDL
@@ -31,6 +32,12 @@ void runControllerInput() {
     }
 
     ///TODO: load settings here
+    CInputToCBC translator;
+    CBC processor;
+
+    // Load your default configuration file
+    translator.loadSettings("ControlerSettings-Default.txt");
+    std::cout << "Controller Live Started. Click into your text editor to begin typing.\n";
 
     SDL_Event e;
     while (true) {
@@ -38,6 +45,11 @@ void runControllerInput() {
         ///TODO: send raw inputs to CInputToCBC.cpp
         while (SDL_PollEvent(&e)) {
             //buttons
+
+            ///FIXME: undefined
+            //Pass the raw event and the processor into logic handler
+            handleControllerLogic(e, translator, processor);
+
             if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
                 std::cout << "Button: " << (int)e.gbutton.button << "\n";
             }
