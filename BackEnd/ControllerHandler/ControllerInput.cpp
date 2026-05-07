@@ -48,7 +48,7 @@ void runControllerInput() {
 
             ///FIXME: undefined
             //Pass the raw event and the processor into logic handler
-            handleControllerLogic(e, translator, processor);
+            //handleControllerLogic(e, translator, processor);
 
             if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN) {
                 std::cout << "Button: " << (int)e.gbutton.button << "\n";
