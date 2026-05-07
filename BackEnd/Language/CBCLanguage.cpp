@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include "Categories.cpp"
+#include "../keyboardVirtual.cpp"
 
 class CBC {
     private:
@@ -71,11 +72,10 @@ public:
 
             ///TODO: remove after keyboardVirtual is setup, should do in there instead
             // Output the result
-            // Spits it back to PowerShell for testing
-            std::cout << translated << std::flush;
+            KEYBOARD kb;
+            kb.inputString(translated);
 
             /// TODO: Call Keyboard.cpp here to send actual keystrokes to Windows
-            // Keyboard::sendInput(translated);
         }      
 
         void runFile(std::string fileName){
